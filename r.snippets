@@ -1,0 +1,303 @@
+snippet comma
+	"${0}",
+
+snippet lib
+	library(${1:package})
+
+snippet req
+	require(${1:package})
+
+snippet src
+	source("${1:file.R}")
+
+snippet ret
+	return(${1:code})
+
+snippet mat
+	matrix(${1:data}, nrow = ${2:rows}, ncol = ${3:cols})
+
+snippet sg
+	setGeneric("${1:generic}", function(${2:x, ...}) {
+		standardGeneric("${1:generic}")
+	})
+
+snippet sm
+	setMethod("${1:generic}", ${2:class}, function(${2:x, ...}) {
+		${0}
+	})
+
+snippet sc
+	setClass("${1:Class}", slots = c(${2:name = "type"}))
+
+snippet if
+	if (${1:condition}) {
+		${0}
+	}
+
+snippet el
+	else {
+		${0}
+	}
+
+snippet ei
+	else if (${1:condition}) {
+		${0}
+	}
+
+snippet fun
+	${1:name} <- function(${2:variables}) {
+		${0}
+	}
+
+snippet for
+	for (${1:variable} in ${2:vector}) {
+		${0}
+	}
+
+snippet while
+	while (${1:condition}) {
+		${0}
+	}
+
+snippet switch
+	switch (${1:object},
+		${2:case} = ${3:action}
+	)
+
+snippet apply
+	apply(${1:array}, ${2:margin}, ${3:...})
+
+snippet lapply
+	lapply(${1:list}, ${2:function})
+
+snippet sapply
+	sapply(${1:list}, ${2:function})
+
+snippet mapply
+	mapply(${1:function}, ${2:...})
+
+snippet tapply
+	tapply(${1:vector}, ${2:index}, ${3:function})
+
+snippet vapply
+	vapply(${1:list}, ${2:function}, FUN.VALUE = ${3:type}, ${4:...})
+
+snippet rapply
+	rapply(${1:list}, ${2:function})
+
+snippet ts
+	`r paste("#", date(), "------------------------------\n")`
+	
+snippet tt
+	# ${0} `r paste(date(), "------------------------------\n")`
+	
+snippet shinyapp
+	library(shiny)
+	
+	ui <- fluidPage(
+	  ${0}
+	)
+	
+	server <- function(input, output, session) {
+	  
+	}
+	
+	shinyApp(ui, server)
+
+snippet killcon
+	# kill all opened connections -------
+	dbListConnections( dbDriver( drv = "MySQL"))
+	lapply( dbListConnections( dbDriver( drv = "MySQL")), dbDisconnect)
+	
+snippet rencols
+	# rename columns names of dataframe 
+	# set_names with magrittr
+	mtcars %>% 
+	  group_by(cyl) %>%
+	  summarise(mean(disp), mean(hp)) %>%
+	  magrittr::set_names(c("cyl", "disp_mean", "hp_mean"))
+	# set_names with purrr
+	mtcars %>% 
+	  group_by(cyl) %>%
+	  summarise(mean(disp), mean(hp)) %>%
+	  purrr::set_names(c("cyl", "disp_mean", "hp_mean"))
+	# setNames with stats
+	mtcars %>%
+	  group_by(cyl) %>%
+	  summarise(mean(disp), mean(hp)) %>%
+	  stats::setNames(c("cyl", "disp_mean", "hp_mean"))
+	  # Using patterns 
+		# base R
+		names(df) <- gsub("abc", "xyz", names(df))
+		colnames(df) <- gsub("^pattern.","replacement",colnames(df))
+		# using dplyr
+		df <- df %>% rename_(.dots=setNames(names(.), gsub("abc", "xyz",names(.))))
+		# padding zeros
+		names(${dataframe}) <- gsub("^X", "", names(${dataframe})) %>% str_pad(2, pad = "0") 
+	  
+snippet renacol
+	# rename a column by position 
+	colnames(${1:dataframe})[1] <- "${2:colname}"
+	# using dplyr select
+	dplyr::select(new_name = 1, dplyr::everything()) %>% ...
+	# using dot syntax
+	dplyr::rename_(ChangedNameAgain = names(.)[1])
+
+
+snippet widemult
+	# wide dataframe by several variables
+	library("reshape2")
+	my.df <- data.frame(ID=rep(c("A","B","C"), 5), TIME=rep(1:5, each=3), X=1:15, Y=16:30)
+	dcast(melt(my.df, id.vars=c("ID", "TIME")), ID~variable+TIME)
+
+snippet flatten
+	# flatten dataframe avoiding nulls
+	library(dplyr)
+	library(tidyr)
+	df <- data.frame(A=c(1,1),B=c(NA,2),C=c(3,NA),D=c(NA,2),E=c(5,NA))
+	df2 <- df %>%
+	group_by(A) %>%
+	fill(everything(), .direction = "down") %>%
+	fill(everything(), .direction = "up") %>%
+	slice(1)
+
+snippet xaripdf
+	# export xaringan pres to pdf
+	library(webshot) 
+	file_name <- normalizePath("C://Users//username//Documents//prez.html")
+	webshot(file_name, "prez.pdf")
+	
+snippet onlynumbers
+	readr::parse_number("ads052788R")
+	
+snippet col2df
+	${1:dataframename} <- read.table(text = "", col.names = ${2:dfcolname})
+	
+snippet rmodd
+	# remove extraneous characters from string
+	 document <- iconv(${1:document}, to='ASCII//TRANSLIT')
+
+snippet linkdt
+	# insert links into DT column
+		composition <- function(){
+paste0("<img src='http://img.url.com/files/Excel-logo.png' width = '50px'><a href='sdfsfd/DSG",fichero,"'> Excel Download</a>")
+}
+	DT::datatable(
+	subset_dataset(),
+	caption = htmltools::withTags(HTML(composition())),
+	filter = "top",
+	options = list(
+	pageLength = 10,
+	scrollX = TRUE,
+	scrollCollapse = TRUE,
+	scrollY = "600px"), 
+	extensions = list("Scroller")
+	) 
+
+snippet splitdfs
+	# split dataframe into list of dataframes by grouped column
+	#  dplyr losing name
+	df %>% group_by(column) %>% do(data = (.)) %>% select(data) %>% map(identity)
+	# split not losing name
+	df %>% split(.$column)
+	
+snippet forceunlistcolumns
+	# force unlist all columns from dataframe
+		${1:dataframename} <- data.frame(matrix(unlist(${1:dataframename}), nrow = nrow(${1:dataframename})), stringsAsFactors = FALSE) 
+
+snippet rmemptyrows
+	 ${1:dataframename} <- ${1:dataframename}[rowSums(is.na(${1:dataframename})) != ncol(${1:dataframename}), ]
+
+snippet returnindexname
+	parent.frame()$i[]
+
+snippet multdf2excel
+	# multiple dataframes to excel file
+	save.xlsx <- function(file, ...)
+	{
+		require(xlsx, quietly = TRUE)
+		objects <- list(...)
+		fargs <- as.list(match.call(expand.dots = TRUE))
+		objnames <- as.character(fargs)[-c(1, 2)]
+		nobjects <- length(objects)
+		for (i in 1:nobjects) {
+			if (i == 1)
+				write.xlsx(objects[[i]], file, sheetName = objnames[i])
+				else write.xlsx(objects[[i]], file, sheetName = objnames[i],append = TRUE)
+			}
+	}
+
+snippet xml2df
+	require(magrittr)
+	require(xml2)
+	data <- xml2::read_xml("my.xml") %>%
+	  xml2::as_xml_document() %>%
+	  xml2::as_list(nofunciona)
+	final_df <- data.frame(t(unlist(data)), stringsAsFactors=FALSE)
+	
+snippet pipetee
+	# generate df file inside a chain of dplyr
+	${1:dataframename} %>%
+	  dplyr::select(mycol = 1, dplyr::everything()) %T>%
+	  assign("mydf",.,envir = .GlobalEnv) %>%
+	  dplyr::mutate(new = substr(mycol, 1, 10)) %>%
+	  dplyr::select(new, old) 
+
+snippet logerrors
+	library(futile.logger)
+	futile.logger::flog.appender(appender.file('/home/user/logs/mylog.log'))
+	options(error = function() { flog.error(geterrmessage()) ; traceback() ; stop() })
+
+snippet zeropad
+	# pad a string with zeros
+	str_pad(2, pad = "0") 
+
+snippet partialmatch
+	# using str_detect from stringr package
+	library(stringr)
+	str_detect(df$columntosearch,paste(df2$stringstofind,collapse = '|'))
+	# using sapply
+	sapply(df$columntosearch, function(x) any(sapply(df2$stringstofind, str_detect, string = x)))
+	# using grepl
+	df[grepl(paste(df2$tringstofind,collapse = '|'),df$columntosearch),]
+	# using stringi
+	library(stringi)
+	stri_detect_regex(df$columntosearch, paste(df2$stringstofind, collapse = "|"))       
+	# using Dplyr mutate and any column
+	test.data <- data.frame(item = c("Apple", "Bear", "Orange", "Pear", "Two Apples"))
+	fruit <- c("Apple", "Orange", "Pear")
+	test.data %>% 
+	rowwise() %>% 
+	mutate(is.fruit = sum(str_detect(item, fruit)))
+
+snippet zipping
+	Sys.setenv("R_ZIPCMD" = "C:/Rtools/bin/zip.exe")
+	# using system call
+	system("zip /home/user/zipped_files -r -j -9 /home/user/images")
+	# using utils
+	utils::zip(zipfile = "/home/user/zipped_files", files = dir('/home/user/images', all.files = TRUE, full.names = TRUE, recursive = TRUE), flags = '-j')
+
+snippet maxalert
+	options(shiny.maxRequestSize=50*1024^2) 
+
+snippet exceltime2gmt
+	df$date_d1 <- as.character(as.Date(as.POSIXct((as.numeric(as.character(df$date_d1)) * 86400), origin = "1899-12-30", tz = "GMT")))
+
+snippet getfonts
+	install.packages("extrafont")
+	library(extrafont)
+	font_import()
+
+snippet uk2eu
+	# format numbers to european dots
+		point <- format_format(big.mark = ".", decimal.mark = ",", scientific = FALSE)
+		
+snippet selectcolsbycontent
+	df <- data.frame(column_one = 1:2,
+	                 column_two = 1:2,
+	                 column_three= 3:4,
+	                 column_four= 3:4)
+	df[,sapply(df,function(x) 4 %in% x)]
+	
+snippet dflist2df
+	${1:NewDFname} <- plyr::ldply(${2:list}, data.frame)
