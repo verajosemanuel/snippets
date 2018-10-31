@@ -302,3 +302,46 @@ snippet selectcolsbycontent
 snippet dflist2df
 	${1:NewDFname} <- plyr::ldply(${2:list}, data.frame)
 	
+snippet mycon
+		library(RMySQL)
+		mycon <-
+	  dbConnect(RMariaDB::MariaDB(),
+	            user = 'stage',
+	            password = 'Akz34pil',
+	            dbname = 'stage',
+	            host = 'reportingdb.hipoges.com'
+	  )
+	  on.exit(dbDisconnect(mycon), add = TRUE)
+
+snippet poscon
+		library(glue)
+		library(RPostgreSQL)
+	  poscon <- DBI::dbConnect(RPostgreSQL::PostgreSQL(),
+	                           user = 'brokerleads',
+	                           password = 'uZrkn6R3',
+	                           dbname = 'hams',
+	                           host = 'hamsdb.hipoges.com',
+	                           options = paste0(" -c search_path=", base)
+	  )
+	
+	  dbSendQuery(poscon, glue::glue("set schema '{base}'"))
+	
+	
+	  on.exit(dbDisconnect(poscon), add = TRUE)
+
+snippet header
+		rm(list = ls(all.names = TRUE))
+	
+	if (!require(pacman))
+	  install.packages("pacman")
+	
+	p_load(
+	  "dplyr",
+	  "janitor",
+	  "magrittr",
+	  "tidyr",
+	  "plyr",
+	  "RPostgreSQL",
+	  "RMySQL"
+	)
+
