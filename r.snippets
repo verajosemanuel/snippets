@@ -345,3 +345,17 @@ snippet header
 	  "RMySQL"
 	)
 
+snippet fastload
+	library(data.table)
+	filepaths <- list.files(dir)
+	resultFilename <- "/path/to/resultFile.txt"
+	for (i in 1:length(filepaths)) {
+	  content <- fread(filepaths, header = FALSE, sep = ",")
+	  ### some manipulation for the content 
+	  results <- content[1]
+	  fwrite(results, resultFilename, col.names = FALSE, quote = FALSE, append = TRUE)
+	}
+	finalData <- fread(resultFilename, header = FALSE, sep = ",")
+	
+snippet gendates
+	seq(from = as.Date("2012/1/1"), to = as.Date("2019/1/1"), by = "month")
